@@ -1,9 +1,9 @@
 import { MathemProduct } from "./types.js";
 
 export class MathemApi {
-  public async searchProducts(query: string) {
+  public async searchProducts(query: string, topN = 3) {
     const args = {
-      size: 75,
+      size: topN,
       index: 0,
       searchType: "searchResult",
       sortTerm: "popular",
