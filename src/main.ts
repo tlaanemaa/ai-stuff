@@ -1,2 +1,4 @@
 import "dotenv/config";
-import "./chains/shoppingList.js";
+import { ShoppingList } from "./workflows/ShoppingList.js";
+
+console.log(await new ShoppingList().run());

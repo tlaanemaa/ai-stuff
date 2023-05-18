@@ -1,6 +1,6 @@
 import { MathemProduct } from "./types.js";
 
-export class MathemApi {
+export class Mathem {
   public async searchProducts(query: string, topN = 3) {
     const args = {
       size: topN,
