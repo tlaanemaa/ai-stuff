@@ -29,11 +29,11 @@ export class ShoppingList {
     );
 
     const input = [
-      "Create a meal plan with dinners for the week.",
+      "Make up a dinner recipe.",
       "Check that the ingredients are available on the grocery search engine before using them.",
       "Minimize the amount of ingredients used and wasted.",
-      "Return me the recipes and the combined shopping list for ingredients.",
-    ].join("\n");
+      "The final answer should be the recipe and the list of ingredients and their URLs in the grocery search engine.",
+    ].join(" ");
 
     const result = await executor.call({ input });
     return result;

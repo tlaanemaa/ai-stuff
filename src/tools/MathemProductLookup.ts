@@ -5,26 +5,33 @@ import { TranslatorService } from "./Translator.js";
 export class MathemProductLookup extends Tool {
   public readonly name = "Grocery search engine";
   public readonly description = [
-    "A grocery search engine.",
-    "Useful when you need to look up a component for a recipe, its availability and it price.",
-    "NOT to be used to look up recipes",
+    "Useful when you need to look up an ingredient.",
     "Input should be the name of a single component.",
-    "The response will be the top 3 component matches.",
+    "The response will be the top match along with its price and URL.",
   ].join(" ");
 
-  private readonly translator = new TranslatorService("Swedish");
-  private readonly api = new Mathem();
+  private readonly swedishTranslator = new TranslatorService(
+    "English",
+    "Swedish"
+  );
+  private readonly englishTranslator = new TranslatorService(
+    "Swedish",
+    "English"
+  );
+  private readonly mathem = new Mathem();
 
   protected async _call(prompt: string) {
     try {
-      const promptInSwedish = await this.translator.call(prompt);
-      const products = await this.api.searchProducts(promptInSwedish, 3);
-      const trimmedProducts = products.map((x) => ({
-        name: x.fullName,
-        unit: x.unit,
-        price: x.price,
-        url: x.url,
-      }));
+      const promptInSwedish = await this.swedishTranslator.call(prompt);
+      const products = await this.mathem.searchProducts(promptInSwedish, 1);
+      const trimmedProducts = await Promise.all(
+        products.map(async (x) => ({
+          name: await this.englishTranslator.call(x.fullName),
+          unit: x.unit,
+          price: x.price,
+          url: `https://www.mathem.se${x.url}`,
+        }))
+      );
 
       return JSON.stringify(trimmedProducts);
     } catch (e: unknown) {

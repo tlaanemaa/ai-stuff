@@ -8,8 +8,8 @@ import { DEFAULT_MODEL_NAME } from "../constants.js";
 export class RecipeIngredients extends Tool {
   public readonly name = "Recipe component finder";
   public readonly description = [
-    "Recipe component finder.",
     "Useful when you need to find the ingredients of a recipe.",
+    "The input should be the name of a recipe and the output will be an array of components",
   ].join(" ");
 
   private readonly model = new OpenAI({

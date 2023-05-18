@@ -21,24 +21,33 @@ export class TranslatorService extends Tool {
     template: [
       "Answer the users question as best as possible.",
       "{format_instructions}",
-      `What is "{text}" in ${this.targetLanguage}?`,
+      `Please translate "{text}" from {sourceLanguage} to {targetLanguage}.`,
     ].join("\n"),
-    inputVariables: ["text"],
+    inputVariables: ["text", "sourceLanguage", "targetLanguage"],
     partialVariables: {
       format_instructions: this.parser.getFormatInstructions(),
     },
   });
 
-  constructor(private readonly targetLanguage = "Swedish") {
+  constructor(
+    private readonly sourceLanguage = "English",
+    private readonly targetLanguage = "Swedish"
+  ) {
     super();
   }
 
   public async _call(text: string) {
-    const input = await this.prompt.format({ text });
+    const input = await this.prompt.format({
+      text,
+      sourceLanguage: this.sourceLanguage,
+      targetLanguage: this.targetLanguage,
+    });
     const response = await this.model.call(input);
     const parsed = (await this.parser.parse(response)) as {
       translation: string;
     };
+
+    console.debug(" >> Translated", text, "to", parsed.translation);
     return parsed.translation;
   }
 }
